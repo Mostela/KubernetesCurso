@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+        name: magicbar.example.com
+        labels:
+                app: magicbar
+spec:
+        containers:
+                - name: magicbar
+                  image: mostela/magicbar
+                  ports:
+                          - name: nodejs-port
+                            containerPort: 80

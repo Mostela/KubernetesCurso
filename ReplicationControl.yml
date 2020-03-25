@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: criarusuario
+spec:
+  replicas: 3
+  selector:
+    app: criarusuario
+  template:
+    metadata:
+      name: criarusuario
+      labels:
+        app: criarusuario
+    spec:
+      containers:
+      - name: criarusuario
+        image: mostela/salgapp
+        ports:
+        - containerPort: 3000
+

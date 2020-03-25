@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: magicbar-deployment
+  labels:
+    app: magicbar
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: magicbar
+  template:
+    metadata:
+      labels:
+        app: magicbar
+    spec:
+      containers:
+      - name: magicbar
+        image: mostela/magicbar
+        ports:
+        - containerPort: 80
