@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: magicbar-deployment
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: helloword
+    spec:
+      containers:
+        - name: magicbar-deploy-hc
+          image: mostela/magicbar
+          ports:
+            - containerPort: 80
+              name: nodejs-port
+          livenessProbe:
+            httpGet:
+              port: nodejs-port
+              path: /
+            initialDelaySeconds: 15
+            timeoutSeconds: 30
+  selector:
+    matchLabels:
+      app: helloword
+

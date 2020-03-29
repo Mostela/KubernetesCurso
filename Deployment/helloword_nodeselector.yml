@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: helloword-deployment
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: helloword
+    spec:
+      containers:
+        - name: k8s_magicahello
+          image: mostela/magicbar
+          ports:
+            - containerPort: 80
+              name: nodejs-port
+      nodeSelector:
+        hardware: high-spec

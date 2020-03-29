@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: magicbar.magic.com
+  labels:
+    app: helloword
+spec:
+  containers:
+    - name: magicbar-hello
+      image: mostela/magicbar
+      ports:
+        - containerPort: 80
+      # Marca os testes a serem feitos no container em produçao periodicamente
+      livenessProbe:
+        httpGet:
+          port: 80
+          path: /
+        initialDelaySeconds: 15
+        timeoutSeconds: 30
