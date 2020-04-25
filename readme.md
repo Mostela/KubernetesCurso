@@ -1,8 +1,20 @@
-# **KUBERNETES DOCUMENTAÇAO BASICA - JOAO**
+# **KUBERNETES DOCUMENTAÇAO Basico - Joao Carlos**
 
 ## Seguir as orderns e comandos do basico
-### Dividos em pastas para melhor consulta
+### Dividos em pastas para melhor consulta posteriormente
 
+#### Pode executar os mesmo no Kops no AWS (Nao quis pagar $Dolar$ ta caro R$ 5,59)
+
+---
+
+    sudo apt-get vagrant
+    vagrant up
+    
+Dentro da maquina criada rodar o comando
+    
+    chmod -x config_vagrant.sh
+    sudo ./config_vagrant.sh
+    
 ---
 
 ### Welcome Man!
