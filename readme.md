@@ -1,8 +1,17 @@
-# **KUBERNETES DOCUMENTAÇAO Basico - Joao Carlos**
+# **KUBERNETES DOCUMENTAÇAO - Joao Carlos**
 
 ## Seguir as orderns e comandos do basico
 ### Dividos em pastas para melhor consulta posteriormente
 
+---
+
+## Create a Kuberntes Cluster local - Vagrant - Ansible - Kubernetes
+
+### **Em Produçao ainda**
+
+---
+
+## Kops Install
 #### Pode executar os mesmo no Kops no AWS (Nao quis pagar $Dolar$ ta caro R$ 5,59)
 
 ---

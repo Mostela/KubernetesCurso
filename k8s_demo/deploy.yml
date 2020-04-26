@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-mostela-deploy
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: k8s-mostela
+  template:
+    metadata:
+      labels:
+        app: k8s-mostela
+    spec:
+      containers:
+        - name: k8s-front
+          image: mostela/ex_web_k8s:1.0
+          ports:
+            - containerPort: 80
+              name: ex-web-k8s
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              port: ex-web-k8s
+              path: /
+            initialDelaySeconds: 15
+            timeoutSeconds: 30
