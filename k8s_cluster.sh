@@ -20,5 +20,3 @@ swapoff -a
 
 # Comentar a swapoff para nao ligar mais - Em breve
 # vim /etc/fstab
-
-

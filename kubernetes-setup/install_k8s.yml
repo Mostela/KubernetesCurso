@@ -1,0 +1,47 @@
+# Executar para instalar o Docker e Kuberntes nas VM
+---
+- hosts: k8sWork
+  become: true
+  remote_user: vagrant
+  tasks:
+    - name: "Atualiza pacotes"
+      apt:
+        upgrade: dist
+
+    - name: "Instalando Docker"
+      shell: curl -fsSL https://get.docker.com | bash
+
+    - name: "Preparando para Kubernetes"
+      apt:
+        name: apt-transport-https
+
+    - name: "Adicionando o repositorio"
+      shell: curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+
+    - name: "Adicionando os pacotes"
+      shell: echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" > /etc/apt/sources.list.d/kubernetes.list
+
+    - name: "Atualizando pacotes"
+      shell: apt-get update
+
+    - name: Instalando os binarios
+      apt:
+        pkg:
+          - kubelet
+          - kubeadm
+          - kubectl
+
+    - name: "Grupo do Docker"
+      shell: docker info | grep -i cgroup
+
+    - name: "Configurando docker"
+      shell: sed -i "s/cgroup-driver=systemd/cgroup-driver=cgroupfs/g" /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+
+    - name: "Restart Docker"
+      shell: systemctl daemon-reload
+
+    - name: "Restart K8s"
+      shell: systemctl restart kubelet
+
+    - name: "Desligando memoria virtual"
+      shell: swapoff -a

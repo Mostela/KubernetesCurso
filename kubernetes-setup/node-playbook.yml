@@ -1,0 +1,10 @@
+---
+- hosts: all
+  become: true
+  remote_user: vagrant
+  tasks:
+    - name: "Ip da maquina para um arquivo"
+      shell: echo {{ node_ip }} >> ips.txt
+
+    - name: "Nome do usuario para um arquivo"
+      shell: echo hostname >> user.txt
