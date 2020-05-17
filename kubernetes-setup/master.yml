@@ -1,0 +1,37 @@
+---
+- hosts: kubernetes
+  gather_facts: yes
+  become: yes
+
+  vars:
+    swapfile_path: /swap
+    #myKeySsh: null
+
+  pre_tasks:
+    - name: "Atualiza os pacotes"
+      apt: update_cache=yes cache_valid_time=3600
+      when: ansible_os_family == 'Debian'
+
+    - name: "Desabilita swap"
+      mount:
+        path: "{{ swapfile_path }}"
+        fstype: swap
+        state: absent
+
+    - name: Disable swap.
+      command: swapoff -a
+      when: ansible_swaptotal_mb > 0
+  roles:
+    - geerlingguy.docker
+    - geerlingguy.kubernetes
+
+  tasks:
+    []
+
+  post_tasks:
+    []
+    #- name: "Salvar SSH direto no arquivo das maquinas. Acesso apos criaçao do cluster"
+
+    #- name: "Salvar ip das maquinas em um arquivo"
+
+    #- name: "Subir pods de exemplo no cluster"
