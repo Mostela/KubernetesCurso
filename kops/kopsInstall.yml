@@ -1,0 +1,14 @@
+---
+- hosts: kops
+  become: true
+  gather_facts: yes
+  pre_tasks:
+    - name: Atualiza apt get
+      apt: update_cache=yes cache_valid_time=3600
+      become: yes
+
+  roles:
+    - dosullivan.kops
+
+  tasks:
+    []
