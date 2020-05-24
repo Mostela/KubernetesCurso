@@ -33,7 +33,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       if opts[:name] == "kube3"
         config.vm.provision "ansible" do |ansible|
           ansible.compatibility_mode = "2.0"
-          ansible.playbook = "master.yml"
+          ansible.playbook = "playbook.yml"
           ansible.limit = "all"
           ansible.become = true
           ansible.groups = {
