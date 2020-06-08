@@ -3,3 +3,7 @@
 /.vagrant/
 *retry
 !/kubernetes-setup/.vagrant/
+/.aws/credentials
+/terraform/.aws/credentials
+/terraform/.terraform/
+/terraform/terraform.tfstate
