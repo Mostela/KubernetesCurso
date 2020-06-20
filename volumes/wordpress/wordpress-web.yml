@@ -71,6 +71,10 @@ spec:
             - mountPath: /var/www/html/wp-content/uploads
               name: uploads
       restartPolicy: Always
+      volumes:
+        - name: uploads
+          persistentVolumeClaim:
+            claimName: db-storage
   selector:
     matchLabels:
       app: wordpress-db

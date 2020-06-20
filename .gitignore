@@ -7,3 +7,4 @@
 /terraform/.aws/credentials
 /terraform/.terraform/
 /terraform/terraform.tfstate
+.aws

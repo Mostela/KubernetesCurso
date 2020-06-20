@@ -27,11 +27,11 @@
 
   tasks:
     []
-
-  post_tasks:
-    []
     #- name: "Salvar SSH direto no arquivo das maquinas. Acesso apos criaçao do cluster"
 
     #- name: "Salvar ip das maquinas em um arquivo"
 
     #- name: "Subir pods de exemplo no cluster"
+
+  post_tasks:
+    []
