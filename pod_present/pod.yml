@@ -1,0 +1,13 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-present
+  labels:
+    app: pod-present
+spec:
+  containers:
+    - name: pod-present
+      image: mostela/ex_web_k8s:1.0
+      imagePullPolicy: IfNotPresent
+  restartPolicy: Always

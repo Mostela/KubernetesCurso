@@ -1,0 +1,19 @@
+---
+apiVersion: settings.k8s.io/v1alpha1
+kind: PodPreset
+metadata:
+  name: share-credential
+spec:
+  selector:
+    matchLabels:
+      app: pod-present
+  env:
+    - name: MY_SECRET
+      value: ILoveAdriely
+  volumeMounts:
+    - mountPath: /share
+      name: share-volume
+  volumes:
+    - name: share-volume
+      emptyDir:
+        {}

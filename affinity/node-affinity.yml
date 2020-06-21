@@ -1,0 +1,38 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-affinity
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: node-affinity
+  template:
+    metadata:
+      labels:
+        app: node-affinity
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: env
+                    operator: In
+                    values:
+                      - dev
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 1
+              preference:
+                matchExpressions:
+                  - key: team
+                    operator: In
+                    values:
+                      - engineering-project1
+      containers:
+        - name: k8s-demo
+          image: mostela/ex_web_k8s:2.0
+          ports:
+            - name: nodejs-port
+              containerPort: 3000
