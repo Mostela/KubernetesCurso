@@ -1,0 +1,22 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: deploy-no-quotas
+  namespace: myspace
+spec:
+  replicas: 4
+  template:
+    metadata:
+      labels:
+        app: helloword
+    spec:
+      containers:
+        - name: nginx-front
+          image: nginx
+          ports:
+            - containerPort: 80
+              name: http-port
+  selector:
+    matchLabels:
+      app: helloword

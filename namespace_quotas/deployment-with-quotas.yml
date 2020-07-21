@@ -1,0 +1,29 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-with-quotas
+  namespace: myspace
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: helloword
+  template:
+    metadata:
+      labels:
+        app: helloword
+    spec:
+      containers:
+        - name: nginx-front
+          ports:
+            - containerPort: 80
+              name: "http-port"
+          image: nginx
+          resources:
+            requests:
+              cpu: 200m
+              memory: 0.5Gi
+            limits:
+              cpu: 400m
+              memory: 1Gi

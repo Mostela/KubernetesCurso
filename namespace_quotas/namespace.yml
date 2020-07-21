@@ -1,0 +1,31 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: myspace
+---
+kind: ResourceQuota
+apiVersion: v1
+metadata:
+  name: compute-quota
+  namespace: myspace
+spec:
+  hard:
+    requests.cpu: "1"
+    requests.memory: 1Gi
+    limits.cpu: "2"
+    limits.memory: 2Gi
+---
+kind: ResourceQuota
+apiVersion: v1
+metadata:
+  namespace: myspace
+  name: object-quota
+spec:
+  hard:
+    configmaps: "10"
+    persistentvolumeclaims: "4"
+    replicationcontrollers: "20"
+    secrets: "10"
+    services: "10"
+    services.loadbalancers: "2"
