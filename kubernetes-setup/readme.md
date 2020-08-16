@@ -20,3 +20,12 @@ Para maquinas em Debian como Ubuntu os comandos já estão abaixo
     sudo apt install -y virtualbox 
 
 ## Kubernetes - Ansible - Vagrant
+
+Instale as dependencias do ansible-galaxy apartir do arquivo
+
+    ansible-galaxy install  -r requerimentos.yml
+
+## Para iniciar o cluster
+
+    vagrant up --provision
+    
