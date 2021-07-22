@@ -1,0 +1,167 @@
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: secret-database
+  namespace: database
+  labels:
+    app: hasura-eccomerce
+type: Opaque
+data:
+  postgres_password: cG9zdGdyZXNwYXNzd29yZAo=
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-hasura
+  namespace: database
+  labels:
+    app: hasura-eccomerce
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: base
+              operator: In
+              values:
+                - "yes"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-hasura-claim
+  namespace: database
+  labels:
+    app: hasura-eccomerce
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: postgres-hasura
+  namespace: database
+  labels:
+    app: hasura-eccomerce
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: base
+                operator: In
+                values:
+                  - "yes"
+  volumes:
+    - name: hasura-pv-storage
+      persistentVolumeClaim:
+        claimName: postgres-hasura-claim
+  containers:
+    - name: hasura-database
+      image: postgres:13
+      envFrom:
+        - secretRef:
+            name: secret-database
+      env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: postgres_password
+              name: secret-database
+      ports:
+        - containerPort: 5432
+          name: postgres
+      volumeMounts:
+        - mountPath: "/var/lib/postgresql/data"
+          name: hasura-pv-storage
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: postgres-hasura
+  namespace: database
+  labels:
+    app: hasura-eccomerce
+spec:
+  replicas: 2
+  selector:
+    app: hasura-eccomerce
+  template:
+    metadata:
+      labels:
+        app: hasura-eccomerce
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: base
+                    operator: In
+                    values:
+                      - "yes"
+      containers:
+        - name: hasura-database-rc
+          imagePullPolicy: IfNotPresent
+          image: postgres:13
+          envFrom:
+            - secretRef:
+                name: secret-database
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: postgres_password
+                  name: secret-database
+          ports:
+            - containerPort: 5432
+              name: postgres
+          volumeMounts:
+            - mountPath: "/var/lib/postgresql/data"
+              name: hasura-pv-storage
+      volumes:
+        - name: hasura-pv-storage
+          persistentVolumeClaim:
+            claimName: postgres-hasura-claim
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: hasura-database
+  namespace: database
+  labels:
+    app: hasura-eccomerce
+spec:
+  selector:
+    app: hasura-eccomerce
+  ports:
+    - port: 5432
+      name: postgres
+      targetPort: postgres
+  type: NodePort
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: hasura-database
+  namespace: production
+  labels:
+    app: hasura-eccomerce
+spec:
+  type: ExternalName
+  externalName: hasura-database.database.svc.cluster.local

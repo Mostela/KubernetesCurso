@@ -1,0 +1,99 @@
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: hasura-engine
+  labels:
+    app: hasura-engine
+  namespace: production
+spec:
+  containers:
+    - name: graphql-engine
+      image: hasura/graphql-engine:v2.0.0-beta.2.cli-migrations-v2
+      imagePullPolicy: IfNotPresent
+      ports:
+        - containerPort: 8080
+      env:
+        - name: NEXTJS_SERVER_URL
+          value: hasura-web:3000
+        - name: HASURA_GRAPHQL_DATABASE_URL
+          value: postgres://postgres:postgrespassword@hasura-database:5432/postgres
+        - name: HASURA_GRAPHQL_ENABLE_CONSOLE
+          value: "true"
+        - name: HASURA_GRAPHQL_ENABLED_LOG_TYPES
+          value: startup, http-log, webhook-log, websocket-log, query-log
+        - name: HASURA_GRAPHQL_ADMIN_SECRET
+          value: my-secret
+        - name: HASURA_GRAPHQL_JWT_SECRET
+          value: '{ "type": "HS256", "key": "this-is-a-generic-HS256-secret-key-and-you-should-really-change-it" }'
+        - name: HASURA_GRAPHQL_UNAUTHORIZED_ROLE
+          value: anonymous
+      livenessProbe:
+        httpGet:
+          port: 8080
+        timeoutSeconds: 30
+        initialDelaySeconds: 40
+        failureThreshold: 3
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: hasura-engine
+  labels:
+    app: hasura-engine
+  namespace: production
+spec:
+  replicas: 3
+  selector:
+    app: hasura-engine
+  minReadySeconds: 20
+  template:
+    metadata:
+      name: hasura-engine
+      labels:
+        app: hasura-engine
+      namespace: production
+    spec:
+      containers:
+        - name: graphql-engine
+          image: hasura/graphql-engine:v2.0.0-beta.2.cli-migrations-v2
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              port: 8080
+            timeoutSeconds: 30
+            initialDelaySeconds: 40
+            failureThreshold: 3
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: NEXTJS_SERVER_URL
+              value: hasura-web:3000
+            - name: HASURA_GRAPHQL_DATABASE_URL
+              value: postgres://postgres:postgrespassword@hasura-database:5432/postgres
+            - name: HASURA_GRAPHQL_ENABLE_CONSOLE
+              value: "true"
+            - name: HASURA_GRAPHQL_ENABLED_LOG_TYPES
+              value: startup, http-log, webhook-log, websocket-log, query-log
+            - name: HASURA_GRAPHQL_ADMIN_SECRET
+              value: my-secret
+            - name: HASURA_GRAPHQL_JWT_SECRET
+              value: '{ "type": "HS256", "key": "this-is-a-generic-HS256-secret-key-and-you-should-really-change-it" }'
+            - name: HASURA_GRAPHQL_UNAUTHORIZED_ROLE
+              value: anonymous
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hasura-engine
+  labels:
+    app: hasura-engine
+  namespace: production
+spec:
+  type: LoadBalancer
+  selector:
+    app: hasura-engine
+  ports:
+    - port: 8060
+      targetPort: http

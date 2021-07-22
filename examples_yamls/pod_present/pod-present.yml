@@ -9,7 +9,7 @@ spec:
       app: pod-present
   env:
     - name: MY_SECRET
-      value: ILoveAdriely
+      value: joao
   volumeMounts:
     - mountPath: /share
       name: share-volume

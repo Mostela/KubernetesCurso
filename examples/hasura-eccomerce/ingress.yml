@@ -1,0 +1,39 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+  labels:
+    app: hasura-eccomerce
+  namespace: production
+  name: hasura-ingress
+spec:
+  rules:
+    - http:
+        paths:
+          - backend:
+              service:
+                name: hasura-web
+                port:
+                  number: 3000
+            path: /web
+            pathType: Prefix
+          - backend:
+              service:
+                name: hasura-engine
+                port:
+                  number: 8060
+            pathType: Prefix
+            path: /
+          - backend:
+              service:
+                name: minio-hasura
+                port:
+                  number: 9001
+            path: /minio
+            pathType: Prefix
