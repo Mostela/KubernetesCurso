@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: example-k8s
+  labels:
+    app: k8s-mostela
+    istio-injection: enabled
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-mostela-deploy
+  namespace: example-k8s
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: k8s-mostela
+  template:
+    metadata:
+      labels:
+        app: k8s-mostela
+    spec:
+      containers:
+        - name: k8s-front
+          image: nginx
+          ports:
+            - containerPort: 80
+              name: ex-web-k8s
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              port: ex-web-k8s
+              path: /
+            initialDelaySeconds: 15
+            timeoutSeconds: 30
