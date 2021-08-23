@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-blue-green
+  labels:
+    app: example
+spec:
+  type: LoadBalancer
+  selector:
+    color: green
+  ports:
+    - port: 80
+      targetPort: 80
