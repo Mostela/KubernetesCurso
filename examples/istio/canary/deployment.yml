@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mostela-v1
+spec:
+  selector:
+    matchLabels:
+      app: canary
+  replicas: 4
+  template:
+    metadata:
+      labels:
+        app: canary
+        version: v1
+    spec:
+      containers:
+        - image: mcr.microsoft.com/azuredocs/aks-helloworld:v1
+          name: mostela
+          env:
+            - name: TITLE
+              value: "Deploy V1 - PRODUÇAO"
+          ports:
+            - containerPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mostela-v2
+spec:
+  selector:
+    matchLabels:
+      app: canary
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: canary
+        version: v2
+    spec:
+      containers:
+        - image: mcr.microsoft.com/azuredocs/aks-helloworld:v1
+          name: mostela
+          env:
+            - name: TITLE
+              value: "Deploy V2 - Levemente estavel"
+          ports:
+            - containerPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mostela-v3
+spec:
+  selector:
+    matchLabels:
+      app: canary
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: canary
+        version: v3
+    spec:
+      containers:
+        - image: mcr.microsoft.com/azuredocs/aks-helloworld:v1
+          name: mostela
+          env:
+            - name: TITLE
+              value: "Deploy V3 - Ainda com muito problema"
+          ports:
+            - containerPort: 80
